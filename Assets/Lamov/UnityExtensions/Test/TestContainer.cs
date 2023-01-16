@@ -7,7 +7,7 @@ namespace Lamov.UnityExtensions.Test
     {
         private void Awake()
         {
-            var container = new Container(new A(), new B());
+            var container = new Container<object>(new A(), new B());
         }
     }
 

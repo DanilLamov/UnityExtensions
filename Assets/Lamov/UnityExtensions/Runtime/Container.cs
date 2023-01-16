@@ -3,25 +3,25 @@ using System.Collections.Generic;
 
 namespace Lamov.UnityExtensions.Runtime
 {
-    public class Container
+    public class Container<TComponent> where TComponent : class
     {
-        private Dictionary<Type, object> _components;
+        private Dictionary<Type, TComponent> _components;
 
         public Container()
         {
-            _components = new Dictionary<Type, object>();
+            _components = new Dictionary<Type, TComponent>();
         }
         
-        public Container(params object[] components)
+        public Container(params TComponent[] components)
         {
-            _components = new Dictionary<Type, object>();
+            _components = new Dictionary<Type, TComponent>();
             foreach (var component in components)
             {
                 Add(component);
             }
         }
 
-        public void Add<T>(T component) where T : class => _components.Add(component.GetType(), component);
+        public void Add(TComponent component) => _components.Add(component.GetType(), component);
         
         public T Get<T>() where T : class => _components[typeof(T)] as T;
 
