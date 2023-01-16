@@ -5,7 +5,7 @@ namespace Lamov.UnityExtensions.Runtime
 {
     public class Container<TComponent> where TComponent : class
     {
-        private Dictionary<Type, TComponent> _components;
+        protected Dictionary<Type, TComponent> _components;
 
         public Container()
         {
