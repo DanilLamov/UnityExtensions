@@ -313,6 +313,7 @@ GameObject:
   - component: {fileID: 2139353563}
   - component: {fileID: 2139353565}
   - component: {fileID: 2139353566}
+  - component: {fileID: 2139353567}
   m_Layer: 0
   m_Name: Test
   m_TagString: Untagged
@@ -371,3 +372,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb02aab8cf594bddb94f46141759c0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2139353567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2139353562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39b05a23c77540c58c3a815a13424213, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _point1: {x: 2.4000192, y: 0, z: 1.5087701}
+  _point2:
+    Position: {x: 3.591868, y: 0, z: -0.26456153}
+    Rotation: {x: -0.24763341, y: -0.67030567, z: -0.28141177, w: 0.6404495}
+  _points1:
+  - {x: 1.0178468, y: 0, z: -0.6451573}
+  - {x: 0.09636819, y: 0, z: -1.2509067}
+  _points2:
+  - Position: {x: 1.2443705, y: 0.40050673, z: 0}
+    Rotation: {x: 0, y: 0, z: -0.26164615, w: 0.9651639}
+  - Position: {x: 0.68, y: 0.40050673, z: 0}
+    Rotation: {x: 0, y: 0, z: -0.26164615, w: 0.9651639}

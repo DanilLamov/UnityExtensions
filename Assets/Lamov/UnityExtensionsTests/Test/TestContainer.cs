@@ -1,7 +1,7 @@
 using Lamov.UnityExtensions.Runtime;
 using UnityEngine;
 
-namespace Lamov.UnityExtensions.Test
+namespace Lamov.UnityExtensionsTests.Test
 {
     public class TestContainer : MonoBehaviour
     {

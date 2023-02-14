@@ -1,7 +1,7 @@
 ﻿using Lamov.UnityExtensions.Runtime.Draw;
 using UnityEngine;
 
-namespace Lamov.UnityExtensions.Test
+namespace Lamov.UnityExtensionsTests.Test
 {
     [ExecuteAlways]
     public class TestGizmosExtensions : MonoBehaviour
