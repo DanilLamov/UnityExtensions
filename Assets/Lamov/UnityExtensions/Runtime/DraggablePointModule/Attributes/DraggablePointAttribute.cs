@@ -8,10 +8,12 @@ namespace Lamov.UnityExtensions.Runtime.DraggablePointModule.Attributes
     public class DraggablePointAttribute : PropertyAttribute
     {
         public ColorEnum ColorEnum { get; private set; }
+        public Space Space { get; private set; }
 
-        public DraggablePointAttribute(ColorEnum colorEnum = default)
+        public DraggablePointAttribute(ColorEnum colorEnum = default, Space space = Space.World)
         {
             ColorEnum = colorEnum;
+            Space = space;
         }
     }
 }

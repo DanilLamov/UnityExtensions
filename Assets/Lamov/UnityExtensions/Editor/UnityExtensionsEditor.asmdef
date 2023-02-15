@@ -1,7 +1,7 @@
 {
     "name": "UnityExtensionsEditor",
     "rootNamespace": "",
-    "references": ["GUID:7cae9d462acad2848969a6a3091c8a80"],
+    "references": ["GUID:7cae9d462acad2848969a6a3091c8a80","GUID:ca1d213efad1dd94da6f67e1db16f75d"],
     "includePlatforms": [
         "Editor"
     ],
