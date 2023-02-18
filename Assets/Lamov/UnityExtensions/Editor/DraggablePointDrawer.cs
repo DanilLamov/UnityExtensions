@@ -139,6 +139,12 @@ namespace Lamov.UnityExtensions.Editor
             switch (draggablePointAttribute.Space)
             {
                 case Space.World:
+                    if (point.TargetTransform)
+                    {
+                        point.Position = point.TargetTransform.position;
+                        point.Rotation = point.TargetTransform.rotation;
+                    }
+                    
                     Handles.Label(point.Position, property.name);
                     Handles.SphereHandleCap( 0, point.Position, point.Rotation, .1f, EventType.Repaint);
                     point.Position = Handles.PositionHandle(point.Position, point.Rotation);
@@ -146,9 +152,9 @@ namespace Lamov.UnityExtensions.Editor
                     break;
                 
                 case Space.Self:
-                    var pointWorldPosition = _targetTransform.position + point.Position;
+                    var pointWorldPosition = point.TargetTransform ? point.TargetTransform.position : _targetTransform.position + point.Position;
                     pointWorldPosition = _targetRotate * (pointWorldPosition - _targetTransform.position) + _targetTransform.position;
-                    var pointRotation = point.Rotation * _targetRotate * _targetTransform.rotation;
+                    var pointRotation = (point.TargetTransform ? point.TargetTransform.rotation : point.Rotation) * _targetRotate * _targetTransform.rotation;
                     
                     Handles.Label(pointWorldPosition, property.name);
                     Handles.SphereHandleCap( 0, pointWorldPosition, pointRotation, .1f, EventType.Repaint);

@@ -14,5 +14,12 @@ namespace Lamov.UnityExtensions.Runtime.DraggablePointModule
             Position = position;
             Rotation = rotation == default ? Quaternion.identity : rotation;
         }
+        
+#if UNITY_EDITOR
+
+        public Transform TargetTransform => _targetTransform;
+        [SerializeField] private Transform _targetTransform;
+
+#endif
     }
 }
