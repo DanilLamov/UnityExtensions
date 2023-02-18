@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Lamov.UnityExtensions.Runtime;
 using Lamov.UnityExtensions.Runtime.ColorsModule;
 using Lamov.UnityExtensions.Runtime.DraggablePointModule;
 using Lamov.UnityExtensions.Runtime.DraggablePointModule.Attributes;
-using Lamov.UnityExtensionsTests.Test.DraggablePointTestModule.UnityComponents;
 using UnityEditor;
 using UnityEngine;
 using Object = System.Object;
@@ -31,11 +29,6 @@ namespace Lamov.UnityExtensions.Editor
         public void OnSceneGUI()
         {
             UpdateTransformChanges();
-
-            if (_targetTransform.gameObject.TryGetComponent(out DraggablePointTest draggablePointTest))
-            {
-                
-            }
 
             foreach (var (value, field, draggablePointAttribute) in GetDeepDraggablePointAttributeFields(serializedObject.targetObject))
             {
@@ -196,17 +189,14 @@ namespace Lamov.UnityExtensions.Editor
         private static IEnumerable<(Object, FieldInfo, DraggablePointAttribute)> GetDeepDraggablePointAttributeFields(Object serializedObject)
         {
             if (serializedObject == null) yield break;
-            
-            var draggablePointAttributeType = typeof(DraggablePointAttribute);
             var serializedObjectType = serializedObject.GetType();
-
             if (serializedObjectType.IsPrimitive) yield break;
             
             var fields = serializedObjectType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
             foreach (var field in fields)
             {
-                if (field.GetCustomAttribute(draggablePointAttributeType, false) is DraggablePointAttribute draggablePointAttribute)
+                if (field.GetCustomAttribute(typeof(DraggablePointAttribute), false) is DraggablePointAttribute draggablePointAttribute)
                 {
                     yield return (field.GetValue(serializedObject), field, draggablePointAttribute);
                     continue;
