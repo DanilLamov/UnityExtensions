@@ -1,10 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
+using Lamov.UnityExtensions.Runtime;
 using Lamov.UnityExtensions.Runtime.ColorsModule;
 using Lamov.UnityExtensions.Runtime.DraggablePointModule;
 using Lamov.UnityExtensions.Runtime.DraggablePointModule.Attributes;
+using Lamov.UnityExtensionsTests.Test.DraggablePointTestModule.UnityComponents;
 using UnityEditor;
 using UnityEngine;
+using Object = System.Object;
 
 namespace Lamov.UnityExtensions.Editor
 {
@@ -26,45 +30,39 @@ namespace Lamov.UnityExtensions.Editor
 
         public void OnSceneGUI()
         {
-            var draggablePointAttributeType = typeof(DraggablePointAttribute);
-            var serializedObjectType = serializedObject.targetObject.GetType();
-
             UpdateTransformChanges();
 
-            foreach (var field in serializedObjectType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            if (_targetTransform.gameObject.TryGetComponent(out DraggablePointTest draggablePointTest))
             {
-                if (field.GetCustomAttribute(draggablePointAttributeType, false) is not DraggablePointAttribute draggablePointAttribute) continue;
                 
-                var property = serializedObject.FindProperty(field.Name);
-                    
-                if (property.isArray)
+            }
+
+            foreach (var (value, field, draggablePointAttribute) in GetDeepDraggablePointAttributeFields(serializedObject.targetObject))
+            {
+                if (value is Array array)
                 {
-                    for (var x = 0; x < property.arraySize; x++)
+                    foreach (var element in array)
                     {
-                        var element = property.GetArrayElementAtIndex(x);
-                        
-                        if (element.propertyType == SerializedPropertyType.Vector3)
+                        switch (element)
                         {
-                            DrawVector3PointInArray(property.name, element, draggablePointAttribute);
-                        }
-                        else if (element.type == nameof(Point))
-                        {
-                            var point = (field.GetValue(property.serializedObject.targetObject) as Point[])[x];
-                            DrawPointInArray(property.name, point, draggablePointAttribute);
+                            case Vector3 v3:
+                                DrawVector3PointInArray(field.Name, ref v3, draggablePointAttribute);
+                                break;
+                            case Point point:
+                                DrawPointInArray(field.Name, point, draggablePointAttribute);
+                                break;
                         }
                     }
                 }
                 else
                 {
-                    if (property.propertyType == SerializedPropertyType.Vector3)
+                    if (value is Vector3 v3)
                     {
-                        DrawVector3Property(property, draggablePointAttribute);
+                        DrawVector3Property(ref v3, field.Name, draggablePointAttribute);
                     }
-                    else if (property.type == nameof(Point))
+                    else if (value is Point point)
                     {
-                        var point = field.GetValue(property.serializedObject.targetObject) as Point;
-
-                        DrawPointProperty(property, point, draggablePointAttribute);
+                        DrawPointProperty(field.Name, point, draggablePointAttribute);
                     }
                 }
             }
@@ -81,57 +79,57 @@ namespace Lamov.UnityExtensions.Editor
             _lastTargetRotation = targetRotation;
         }
         
-        private void DrawVector3Property(SerializedProperty property, DraggablePointAttribute draggablePointAttribute)
+        private void DrawVector3Property(ref Vector3 property, string name, DraggablePointAttribute draggablePointAttribute)
         {
-            Handles.Label(property.vector3Value, property.name);
+            Handles.Label(property, name);
             Handles.color = draggablePointAttribute.ColorEnum.ToColor();
             
             switch (draggablePointAttribute.Space)
             {
                 case Space.World:
-                    Handles.SphereHandleCap( 0, property.vector3Value, Quaternion.identity, .1f, EventType.Repaint);
-                    property.vector3Value = Handles.PositionHandle(property.vector3Value, Quaternion.identity);
+                    Handles.SphereHandleCap( 0, property, Quaternion.identity, .1f, EventType.Repaint);
+                    property = Handles.PositionHandle(property, Quaternion.identity);
                     break;
                 
                 case Space.Self:
-                    Handles.SphereHandleCap( 0, _targetTransform.position + property.vector3Value, Quaternion.identity, .1f, EventType.Repaint);
+                    Handles.SphereHandleCap( 0, _targetTransform.position + property, Quaternion.identity, .1f, EventType.Repaint);
 
-                    var pointWorldPosition = _targetTransform.position + property.vector3Value;
+                    var pointWorldPosition = _targetTransform.position + property;
                     pointWorldPosition = _targetRotate * (pointWorldPosition - _targetTransform.position) + _targetTransform.position;
 
-                    property.vector3Value = Handles.PositionHandle(pointWorldPosition, Quaternion.identity) - _targetTransform.position;
+                    property = Handles.PositionHandle(pointWorldPosition, Quaternion.identity) - _targetTransform.position;
                     break;
             }
             
             serializedObject.ApplyModifiedProperties();
         }
         
-        private void DrawVector3PointInArray(string name, SerializedProperty property, DraggablePointAttribute draggablePointAttribute)
+        private void DrawVector3PointInArray(string name, ref Vector3 property, DraggablePointAttribute draggablePointAttribute)
         {
-            Handles.Label(property.vector3Value, name);
+            Handles.Label(property, name);
             Handles.color = draggablePointAttribute.ColorEnum.ToColor();
 
             switch (draggablePointAttribute.Space)
             {
                 case Space.World:
-                    Handles.SphereHandleCap( 0, property.vector3Value, Quaternion.identity, .1f, EventType.Repaint);
-                    property.vector3Value = Handles.PositionHandle(property.vector3Value, Quaternion.identity);
+                    Handles.SphereHandleCap( 0, property, Quaternion.identity, .1f, EventType.Repaint);
+                    property = Handles.PositionHandle(property, Quaternion.identity);
                     break;
                 
                 case Space.Self:
-                    Handles.SphereHandleCap( 0, _targetTransform.position + property.vector3Value, Quaternion.identity, .1f, EventType.Repaint);
+                    Handles.SphereHandleCap( 0, _targetTransform.position + property, Quaternion.identity, .1f, EventType.Repaint);
                     
-                    var pointWorldPosition = _targetTransform.position + property.vector3Value;
+                    var pointWorldPosition = _targetTransform.position + property;
                     pointWorldPosition = _targetRotate * (pointWorldPosition - _targetTransform.position) + _targetTransform.position;
 
-                    property.vector3Value = Handles.PositionHandle(pointWorldPosition, Quaternion.identity) - _targetTransform.position;
+                    property = Handles.PositionHandle(pointWorldPosition, Quaternion.identity) - _targetTransform.position;
                     break;
             }
             
             serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawPointProperty(SerializedProperty property, Point point, DraggablePointAttribute draggablePointAttribute)
+        private void DrawPointProperty(string name, Point point, DraggablePointAttribute draggablePointAttribute)
         {
             point.Rotation.Normalize();
             Handles.color = draggablePointAttribute.ColorEnum.ToColor();
@@ -145,7 +143,7 @@ namespace Lamov.UnityExtensions.Editor
                         point.Rotation = point.TargetTransform.rotation;
                     }
                     
-                    Handles.Label(point.Position, property.name);
+                    Handles.Label(point.Position, name);
                     Handles.SphereHandleCap( 0, point.Position, point.Rotation, .1f, EventType.Repaint);
                     point.Position = Handles.PositionHandle(point.Position, point.Rotation);
                     point.Rotation = Handles.RotationHandle(point.Rotation, point.Position);
@@ -156,7 +154,7 @@ namespace Lamov.UnityExtensions.Editor
                     pointWorldPosition = _targetRotate * (pointWorldPosition - _targetTransform.position) + _targetTransform.position;
                     var pointRotation = (point.TargetTransform ? point.TargetTransform.rotation : point.Rotation) * _targetRotate * _targetTransform.rotation;
                     
-                    Handles.Label(pointWorldPosition, property.name);
+                    Handles.Label(pointWorldPosition, name);
                     Handles.SphereHandleCap( 0, pointWorldPosition, pointRotation, .1f, EventType.Repaint);
                     point.Position = Handles.PositionHandle(pointWorldPosition, pointRotation) - _targetTransform.position;
                     point.Rotation = Handles.RotationHandle(pointRotation, pointWorldPosition) * Quaternion.Inverse(_targetRotate) * Quaternion.Inverse( _targetTransform.rotation);
@@ -193,6 +191,33 @@ namespace Lamov.UnityExtensions.Editor
             }
             
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private static IEnumerable<(Object, FieldInfo, DraggablePointAttribute)> GetDeepDraggablePointAttributeFields(Object serializedObject)
+        {
+            if (serializedObject == null) yield break;
+            
+            var draggablePointAttributeType = typeof(DraggablePointAttribute);
+            var serializedObjectType = serializedObject.GetType();
+
+            if (serializedObjectType.IsPrimitive) yield break;
+            
+            var fields = serializedObjectType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            foreach (var field in fields)
+            {
+                if (field.GetCustomAttribute(draggablePointAttributeType, false) is DraggablePointAttribute draggablePointAttribute)
+                {
+                    yield return (field.GetValue(serializedObject), field, draggablePointAttribute);
+                    continue;
+                }
+
+                var fieldValue = field.GetValue(serializedObject);
+                foreach (var x in GetDeepDraggablePointAttributeFields(fieldValue))
+                {
+                    yield return x;
+                }
+            }
         }
     }
 }
