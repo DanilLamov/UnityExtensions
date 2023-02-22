@@ -1,9 +1,7 @@
 {
-    "name": "UnityExtensionsEditor",
+    "name": "UnityExtensionsTest.Editor",
     "rootNamespace": "",
-    "references": [
-        "GUID:7cae9d462acad2848969a6a3091c8a80"
-    ],
+    "references": ["GUID:7cae9d462acad2848969a6a3091c8a80","GUID:b4c08553af170a54d936611391cdb4cf"],
     "includePlatforms": [
         "Editor"
     ],
