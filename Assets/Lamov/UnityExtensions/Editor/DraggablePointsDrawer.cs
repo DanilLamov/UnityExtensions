@@ -39,22 +39,14 @@ namespace Lamov.UnityExtensions.Editor
                         break;
                     
                     case Vector3[] vector3Array:
-                        foreach (var t in vector3Array)
-                        {
-                            var vector3 = t;
-                            DrawVector3Property(ref vector3, draggablePointAttribute, field.Name);
-                            field.SetValue(parent, vector3);
-                        }
+                        for (var i = 0; i < vector3Array.Length; i++) DrawVector3Property(ref vector3Array[i], draggablePointAttribute, field.Name);
+                        field.SetValue(parent, vector3Array);
                         break;
                             
                     case Point[] pointsArray:
                     {
-                        foreach (var t in pointsArray)
-                        {
-                            var point = t;
-                            DrawPointProperty(ref point, draggablePointAttribute, field.Name);
-                            field.SetValue(parent, point);
-                        }
+                        for (var i = 0; i < pointsArray.Length; i++) DrawPointProperty(ref pointsArray[i], draggablePointAttribute, field.Name);
+                        field.SetValue(parent, pointsArray);
                         break;
                     }
                 }
