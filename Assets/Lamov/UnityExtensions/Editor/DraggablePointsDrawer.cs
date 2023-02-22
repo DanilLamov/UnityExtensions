@@ -79,13 +79,15 @@ namespace Lamov.UnityExtensions.Editor
 
             foreach (var field in fields)
             {
+                var fieldValue = field.GetValue(serializedObject);
+                if (fieldValue == null) continue;
+                
                 if (field.GetCustomAttribute(typeof(DraggablePointAttribute), false) is DraggablePointAttribute draggablePointAttribute)
                 {
-                    yield return (field.GetValue(serializedObject), field, draggablePointAttribute);
+                    yield return (fieldValue, field, draggablePointAttribute);
                     continue;
                 }
 
-                var fieldValue = field.GetValue(serializedObject);
                 if (fieldValue is IEnumerable iEnumerable)
                 {
                     foreach (var i in iEnumerable)
