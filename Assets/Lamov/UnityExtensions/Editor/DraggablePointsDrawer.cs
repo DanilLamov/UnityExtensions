@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Lamov.UnityExtensions.Runtime.ColorsModule;
 using Lamov.UnityExtensions.Runtime.DraggablePointModule;
@@ -24,47 +24,46 @@ namespace Lamov.UnityExtensions.Editor
         
         public void DrawDraggablePoints()
         {
-            foreach (var (value, field, draggablePointAttribute) in GetDeepDraggablePointAttributeFields(_serializedObject.targetObject))
+            foreach (var (value, parent, field, draggablePointAttribute) in GetDeepDraggablePointAttributeFields(_serializedObject.targetObject))
             {
                 switch (value)
                 {
                     case Vector3 v3:
                         DrawVector3Property(ref v3, draggablePointAttribute, field.Name);
+                        field.SetValue(parent, v3);
                         break;
                     
                     case Point point:
-                        DrawPointProperty(point, draggablePointAttribute, field.Name);
+                        DrawPointProperty(ref point, draggablePointAttribute, field.Name);
+                        field.SetValue(parent, point);
                         break;
                     
-                    case Array array:
-                    {
-                        switch (array)
+                    case Vector3[] vector3Array:
+                        foreach (var t in vector3Array)
                         {
-                            case Vector3[] vector3Array:
-                                for (var i = 0; i < vector3Array.Length; i++)
-                                {
-                                    DrawVector3Property(ref vector3Array[i], draggablePointAttribute, field.Name);
-                                }
-                                break;
+                            var vector3 = t;
+                            DrawVector3Property(ref vector3, draggablePointAttribute, field.Name);
+                            field.SetValue(parent, vector3);
+                        }
+                        break;
                             
-                            case Point[] pointsArray:
-                            {
-                                foreach (var point in pointsArray)
-                                {
-                                    DrawPointProperty(point, draggablePointAttribute, field.Name);
-                                }
-                                break;
-                            }
+                    case Point[] pointsArray:
+                    {
+                        foreach (var t in pointsArray)
+                        {
+                            var point = t;
+                            DrawPointProperty(ref point, draggablePointAttribute, field.Name);
+                            field.SetValue(parent, point);
                         }
                         break;
                     }
                 }
             }
-            
+
             _serializedObject.ApplyModifiedProperties();
         }
 
-        private static IEnumerable<(Object, FieldInfo, DraggablePointAttribute)> GetDeepDraggablePointAttributeFields(Object serializedObject, List<Object> showedObjects = null)
+        private static IEnumerable<(Object, Object, FieldInfo, DraggablePointAttribute)> GetDeepDraggablePointAttributeFields(Object serializedObject, List<Object> showedObjects = null)
         {
             if (serializedObject == null) yield break;
             
@@ -84,7 +83,7 @@ namespace Lamov.UnityExtensions.Editor
                 
                 if (field.GetCustomAttribute(typeof(DraggablePointAttribute), false) is DraggablePointAttribute draggablePointAttribute)
                 {
-                    yield return (fieldValue, field, draggablePointAttribute);
+                    yield return (fieldValue, serializedObject, field, draggablePointAttribute);
                     continue;
                 }
 
@@ -112,7 +111,7 @@ namespace Lamov.UnityExtensions.Editor
         private void DrawVector3Property(ref Vector3 property, DraggablePointAttribute draggablePointAttribute, string name)
         {
             Handles.color = draggablePointAttribute.ColorEnum.ToColor();
-            
+
             switch (draggablePointAttribute.Space)
             {
                 case Space.World:
@@ -131,7 +130,7 @@ namespace Lamov.UnityExtensions.Editor
             }
         }
 
-        private void DrawPointProperty(Point point, DraggablePointAttribute draggablePointAttribute, string name)
+        private void DrawPointProperty(ref Point point, DraggablePointAttribute draggablePointAttribute, string name)
         {
             point.Rotation.Normalize();
             Handles.color = draggablePointAttribute.ColorEnum.ToColor();

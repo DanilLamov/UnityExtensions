@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Lamov.UnityExtensions.Runtime.DraggablePointModule
 {
     [Serializable]
-    public class Point
+    public struct Point
     {
         public Vector3 Position;
         public Quaternion Rotation;
@@ -16,6 +16,7 @@ namespace Lamov.UnityExtensions.Runtime.DraggablePointModule
         {
             Position = position;
             Rotation = rotation == default ? Quaternion.identity : rotation;
+            _targetTransform = null;
         }
     }
 }

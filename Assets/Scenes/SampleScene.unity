@@ -388,14 +388,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2139353562}
-  m_LocalRotation: {x: 0, y: 0.53634244, z: 0, w: 0.84400046}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 64.87, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2139353567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -408,23 +408,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39b05a23c77540c58c3a815a13424213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _draggablePointsData:
-  - _point:
-      Position: {x: 0, y: 0, z: 0}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      _targetTransform: {fileID: 0}
-    _points:
-    - Position: {x: 1.0000138, y: 0, z: 0.000000834465}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      _targetTransform: {fileID: 0}
-    - Position: {x: 2.0000277, y: 0, z: 0.00000166893}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      _targetTransform: {fileID: 0}
-  - _point:
-      Position: {x: 0, y: 0, z: 0}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      _targetTransform: {fileID: 0}
-    _points:
-    - Position: {x: 0, y: 0, z: 2.9999998}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      _targetTransform: {fileID: 0}
+  _point1: {x: 0.47345728, y: 0, z: 0.9222341}
+  _point2:
+    Position: {x: 2.1721349, y: 0, z: 1.0463138}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    _targetTransform: {fileID: 0}
