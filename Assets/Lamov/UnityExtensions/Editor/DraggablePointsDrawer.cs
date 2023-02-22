@@ -108,7 +108,7 @@ namespace Lamov.UnityExtensions.Editor
             {
                 case Space.World:
                     Handles.Label(property, name);
-                    Handles.SphereHandleCap( 0, property, Quaternion.identity, .1f, EventType.Repaint);
+                    Handles.SphereHandleCap( 0, property, Quaternion.identity, GetPointRadius(property), EventType.Repaint);
                     property = Handles.PositionHandle(property, Quaternion.identity);
                     break;
                 
@@ -116,7 +116,7 @@ namespace Lamov.UnityExtensions.Editor
                     var pointWorldPosition = _targetTransform.TransformPoint(property);
 
                     Handles.Label(pointWorldPosition, name);
-                    Handles.SphereHandleCap( 0, pointWorldPosition, Quaternion.identity, .1f, EventType.Repaint);
+                    Handles.SphereHandleCap( 0, pointWorldPosition, Quaternion.identity, GetPointRadius(pointWorldPosition), EventType.Repaint);
                     property = _targetTransform.InverseTransformPoint(Handles.PositionHandle(pointWorldPosition, Quaternion.identity));
                     break;
             }
@@ -137,7 +137,7 @@ namespace Lamov.UnityExtensions.Editor
                     }
                     
                     Handles.Label(point.Position, name);
-                    Handles.SphereHandleCap( 0, point.Position, point.Rotation, .1f, EventType.Repaint);
+                    Handles.SphereHandleCap( 0, point.Position, point.Rotation, GetPointRadius(point.Position), EventType.Repaint);
                     point.Position = Handles.PositionHandle(point.Position, point.Rotation);
                     point.Rotation = Handles.RotationHandle(point.Rotation, point.Position);
                     break;
@@ -147,13 +147,15 @@ namespace Lamov.UnityExtensions.Editor
                     var pointWorldRotation = point.TargetTransform ? point.TargetTransform.rotation : _targetTransform.rotation * point.Rotation;
                     
                     Handles.Label(pointWorldPosition, name);
-                    Handles.SphereHandleCap( 0, pointWorldPosition, pointWorldRotation, .1f, EventType.Repaint);
+                    Handles.SphereHandleCap( 0, pointWorldPosition, pointWorldRotation, GetPointRadius(pointWorldPosition), EventType.Repaint);
                     point.Position = _targetTransform.InverseTransformPoint(Handles.PositionHandle(pointWorldPosition, pointWorldRotation));
                     point.Rotation = Handles.RotationHandle(pointWorldRotation, pointWorldPosition) * Quaternion.Inverse(_targetTransform.rotation);
                     break;
             }
         }
-        
+
+        private static float GetPointRadius(Vector3 pointWorldPosition) => Vector3.Distance(SceneView.currentDrawingSceneView.camera.transform.position, pointWorldPosition) * .05f;
+
         #endregion
     }
 }
