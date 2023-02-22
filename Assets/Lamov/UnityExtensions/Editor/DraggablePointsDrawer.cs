@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Lamov.UnityExtensions.Runtime.ColorsModule;
@@ -85,6 +86,18 @@ namespace Lamov.UnityExtensions.Editor
                 }
 
                 var fieldValue = field.GetValue(serializedObject);
+                if (fieldValue is IEnumerable iEnumerable)
+                {
+                    foreach (var i in iEnumerable)
+                    {
+                        foreach (var x in GetDeepDraggablePointAttributeFields(i, showedObjects))
+                        {
+                            yield return x;
+                        }
+                    }
+                    continue;
+                }
+                
                 foreach (var x in GetDeepDraggablePointAttributeFields(fieldValue, showedObjects))
                 {
                     yield return x;
