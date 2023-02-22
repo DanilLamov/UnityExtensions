@@ -88,9 +88,9 @@ namespace Lamov.UnityExtensions.Editor
                     continue;
                 }
 
-                if (fieldValue is IEnumerable iEnumerable)
+                if (fieldValue is Array array)
                 {
-                    foreach (var i in iEnumerable)
+                    foreach (var i in array)
                     {
                         foreach (var x in GetDeepDraggablePointAttributeFields(i, showedObjects))
                         {
