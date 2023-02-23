@@ -1,7 +1,6 @@
 ﻿using Lamov.UnityExtensions.Runtime.ColorsModule;
 using Lamov.UnityExtensions.Runtime.DraggablePointModule;
 using Lamov.UnityExtensions.Runtime.DraggablePointModule.Attributes;
-using Lamov.UnityExtensionsTests.Test.DraggablePointTestModule.Data;
 using UnityEngine;
 
 namespace Lamov.UnityExtensionsTests.Test.DraggablePointTestModule.UnityComponents
