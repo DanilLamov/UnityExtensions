@@ -5,11 +5,7 @@ namespace Lamov.UnityExtensions.Runtime.Services.PoolService.Data
 {
     public abstract class PoolData<T> : ScriptableObject where T : IPoolObject
     {
-        [SerializeField,
-#if ODIN_INSPECTOR
-        BoxGroup("Settings"),
-#endif
-         Min(1)] private int _poolIncreaseSize = 1;
+        [SerializeField, Min(1)] private int _poolIncreaseSize = 1;
         
         private PoolContainer _poolContainer;
         
