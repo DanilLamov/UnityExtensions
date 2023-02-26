@@ -36,5 +36,7 @@ namespace Lamov.UnityExtensions.Runtime
             component = null;
             return false;
         }
+
+        public bool HasComponent<T>() => _components.ContainsKey(typeof(T));
     }
 }
