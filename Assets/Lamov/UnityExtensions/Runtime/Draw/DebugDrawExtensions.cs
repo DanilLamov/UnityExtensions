@@ -40,6 +40,18 @@ namespace Lamov.UnityExtensions.Runtime.Draw
             }
         }
 
+        public static void DrawSphere(Vector3 position, Vector3 forward = default, float radius = 1.0f, Color color = default, float duration = 0, bool depthTest = true)
+        {
+	        if (forward == default) forward = Vector3.forward;
+	        
+	        var rightDirection = Vector3.Cross(forward, Vector3.up);
+	        var upDirection = Vector3.Cross(forward, rightDirection);
+	        
+	        DrawCircle(position, forward, radius, color, duration, depthTest);
+	        DrawCircle(position, rightDirection, radius, color, duration, depthTest);
+	        DrawCircle(position, upDirection, radius, color, duration, depthTest);
+        }
+
         public static void DrawRect(Vector3 position, Vector3 up, Vector3 forward, float length = 1, float width = 2, Color color = default, float duration = 0, bool depthTest = true)
         {
 	        up.Normalize();
