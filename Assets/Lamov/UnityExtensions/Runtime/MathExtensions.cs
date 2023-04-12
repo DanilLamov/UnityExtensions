@@ -17,5 +17,13 @@ namespace Lamov.UnityExtensions.Runtime
         public static bool Approximately(this Vector3 a, Vector3 b) => Mathf.Approximately(a.x, b.x) && Mathf.Approximately(a.y, b.y) && Mathf.Approximately(a.z, b.z);
 
         public static float GetProgress(float start, float target, float value) => (value - start) / (target - start);
+
+        public static float GetProgress(Vector3 start, Vector3 target, Vector3 position)
+        {
+            var totalDistance = Vector3.Distance(start, target);
+            var distance = Vector3.Distance(start, position);
+            var progress = distance / totalDistance;
+            return progress;
+        }
     }
 }
