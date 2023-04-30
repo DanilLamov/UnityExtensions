@@ -14,6 +14,8 @@ namespace Lamov.UnityExtensions.Runtime
             return current + movementDirection.normalized * delta;
         }
 
+        public static float MoveTowards(float current, float target, float maxDelta) => Mathf.Abs(target - current) <= maxDelta ? target : current + Mathf.Sign(target - current) * maxDelta;
+
         public static bool Approximately(this Vector3 a, Vector3 b) => Mathf.Approximately(a.x, b.x) && Mathf.Approximately(a.y, b.y) && Mathf.Approximately(a.z, b.z);
 
         public static float GetProgress(float start, float target, float value) => (value - start) / (target - start);
