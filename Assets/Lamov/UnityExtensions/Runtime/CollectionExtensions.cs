@@ -4,7 +4,7 @@ namespace Lamov.UnityExtensions.Runtime
 {
     public static class CollectionExtensions
     {
-        static bool ListEquals<T>(List<T> a, List<T> b) 
+        public static bool ListEquals<T>(this List<T> a, List<T> b) 
         {
             if (a == null) return b == null;
             if (b == null || a.Count != b.Count) return false;
